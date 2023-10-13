@@ -31,5 +31,6 @@ Route::group(['prefix'=>'/v1'], function(){
     });
     Route::group(['prefix' => 'employees', 'middleware' => 'auth.jwt'], function(){
         Route::post('/', [EmployeeController::class, 'store']);
+        Route::put('/{id}', [EmployeeController::class, 'update']);
     });
 });

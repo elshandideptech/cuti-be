@@ -9,7 +9,19 @@ use App\Models\Employee;
 class EmployeeController extends Controller
 {
     public function index(){
-
+        try {
+            $employees = Employee::select(
+                'id',
+                'first_name',
+                'last_name',
+                'email',
+                'phone_number',
+                'address',
+                'gender'
+            )->get();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public function show($id){
@@ -45,14 +57,53 @@ class EmployeeController extends Controller
         try {
             $employee = Employee::create($validator->validated());
             
-            return response()->json(['status' => true, 'message' => 'Success Insert Data', 'data' => $employee]);
+            return response()->json([
+                    'status' => true, 
+                    'message' => 'Success Insert Data', 
+                    'data' => $employee
+                ]);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
         }
     }
 
+    /**
+     * fungsi untuk mengubah data karyawan baru
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
+     * @param $first_name First Name of employee (required, max 20 characters)
+     * @param $last_name Last Name of employee (required, max 20 characters)
+     * @param $email email employee (required, max 50 characters)
+     * @param $phone_number phone number employee (required, max 15 characters)
+     * @param $address address employee (required, max 255 characters)
+     * @param $gender gender employee (required, max 10 characters, in: Laki-Laki/Perempuan)
+     * @return void success message and data updated
+     * created at October 13, 2023
+     */
     public function update(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:20',
+            'last_name' => 'required|string|max:20',
+            'email' => 'required|email|max:50',
+            'phone_number' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
+            'gender' => 'required|string|max:10|in:Laki-Laki,Perempuan'
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        try {
+            $employee = Employee::find($id);
+            $employee->update($validator->validated());
+
+            return response()->json([
+                'status' => true, 
+                'message' => 'Success Update Emloyee', 
+                'data' => $employee]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
     }
 
     public function destroy($id){
