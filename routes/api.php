@@ -30,6 +30,7 @@ Route::group(['prefix'=>'/v1'], function(){
         Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth.jwt');
     });
     Route::group(['prefix' => 'employees', 'middleware' => 'auth.jwt'], function(){
+        Route::get('/', [EmployeeController::class, 'index']);
         Route::post('/', [EmployeeController::class, 'store']);
         Route::put('/{id}', [EmployeeController::class, 'update']);
     });

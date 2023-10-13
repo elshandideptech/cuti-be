@@ -8,6 +8,12 @@ use App\Models\Employee;
 
 class EmployeeController extends Controller
 {
+    /**
+     * fungsi untuk mengambil semua data karyawan
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON data employees
+     * created at October 13, 2023
+     */
     public function index(){
         try {
             $employees = Employee::select(
@@ -19,8 +25,18 @@ class EmployeeController extends Controller
                 'address',
                 'gender'
             )->get();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Success Get All Empoyees',
+                'data' => $employees
+            ]);
         } catch (\Throwable $th) {
-            //throw $th;
+            return response()->json([
+                'status' => false,
+                'userMessage' => 'Failed Get All Employees',
+                'developerMessage' => $th->getMessage()
+            ], 500);
         }
     }
 
@@ -63,7 +79,11 @@ class EmployeeController extends Controller
                     'data' => $employee
                 ]);
         } catch (\Throwable $th) {
-            return response()->json(['message' => $th->getMessage()], 500);
+            return response()->json([
+                'status' => false,
+                'userMessage' => 'Failed to Insert Employee',
+                'developerMessage' => $th->getMessage()
+            ], 500);
         }
     }
 
@@ -102,7 +122,11 @@ class EmployeeController extends Controller
                 'message' => 'Success Update Emloyee', 
                 'data' => $employee]);
         } catch (\Throwable $th) {
-            return response()->json(['message' => $th->getMessage()], 500);
+            return response()->json([
+                'status' => false,
+                'userMessage' => 'Failed to Update Employee',
+                'developerMessage' => $th->getMessage()
+            ], 500);
         }
     }
 
