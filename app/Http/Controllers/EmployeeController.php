@@ -40,8 +40,36 @@ class EmployeeController extends Controller
         }
     }
 
+    /**
+     * fungsi untuk mengambil data karyawan berdasarkan id
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON data employee
+     * created at October 13, 2023
+     */
     public function show($id){
+        try {
+            $employees = Employee::select(
+                'id',
+                'first_name',
+                'last_name',
+                'email',
+                'phone_number',
+                'address',
+                'gender'
+            )->find($id);
 
+            return response()->json([
+                'status' => true,
+                'message' => 'Success Get The Employee',
+                'data' => $employees
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'userMessage' => 'Failed Get The Employee',
+                'developerMessage' => $th->getMessage()
+            ], 500);
+        }
     }
     
     /**
