@@ -34,5 +34,6 @@ Route::group(['prefix'=>'/v1'], function(){
         Route::get('/{id}', [EmployeeController::class, 'show']);
         Route::post('/', [EmployeeController::class, 'store']);
         Route::put('/{id}', [EmployeeController::class, 'update']);
+        Route::delete('/{id}', [EmployeeController::class, 'destroy']);
     });
 });

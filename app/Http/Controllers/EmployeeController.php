@@ -158,7 +158,28 @@ class EmployeeController extends Controller
         }
     }
 
+    /**
+     * fungsi untuk menghapus data karyawan berdasarkan id
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON status, message, and data
+     * created at October 13, 2023
+     */
     public function destroy($id){
-        
+        try {
+            $employee = Employee::find($id);
+            $employee->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Success Delete Employee',
+                'data' => $employee
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'userMessage' => 'Faied to Delete Employee',
+                'data' => $emloyee
+            ]);
+        }
     }
 }
