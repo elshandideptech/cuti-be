@@ -10,6 +10,15 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
+    /**
+     * fungsi untuk login user/admin
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
+     * @param $email email user/admin (required, max 50 characters)
+     * @param $password password user/admin (required, min 8 characters)
+     * @return void untuk access token login
+     * created at October 13, 2023
+     */
+
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -36,6 +45,12 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * fungsi untuk logout user/admin
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return void untuk remove access token
+     * created at October 13, 2023
+     */
     public function logout(){
         if ($removeToken = JWTAuth::invalidate(JWTAuth::getToken())){
             return response()->json([
