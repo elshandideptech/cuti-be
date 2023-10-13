@@ -2,7 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\{
+    AuthController,
+    EmployeeController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -25,5 +28,8 @@ Route::group(['prefix'=>'/v1'], function(){
     Route::group(['prefix'=>'/auth'], function(){
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth.jwt');
+    });
+    Route::group(['prefix' => 'employees', 'middleware' => 'auth.jwt'], function(){
+        Route::post('/', [EmployeeController::class, 'store']);
     });
 });
