@@ -177,7 +177,7 @@ class EmployeeController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'userMessage' => 'Faied to Delete Employee',
+                'userMessage' => 'Failed to Delete Employee',
                 'data' => $emloyee
             ]);
         }
