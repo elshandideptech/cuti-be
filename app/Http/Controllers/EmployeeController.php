@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Employee;
+use App\Helpers\ApiResponse;
 
 class EmployeeController extends Controller
 {
@@ -26,17 +27,9 @@ class EmployeeController extends Controller
                 'gender'
             )->get();
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Success Get All Empoyees',
-                'data' => $employees
-            ]);
+            return ApiResponse::successResponse($employees, 'Success Get All Empoyees');
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'userMessage' => 'Failed Get All Employees',
-                'developerMessage' => $th->getMessage()
-            ], 500);
+            return ApiResponse::errorResponse('Failed Get All Employees', $th->getMessage(), 500);
         }
     }
 
@@ -58,17 +51,9 @@ class EmployeeController extends Controller
                 'gender'
             )->find($id);
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Success Get The Employee',
-                'data' => $employees
-            ]);
+            return ApiResponse::successResponse($employee, 'Succecc Get The Employee');
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'userMessage' => 'Failed Get The Employee',
-                'developerMessage' => $th->getMessage()
-            ], 500);
+            return Apiesponse::errorResponse('Failed Get the Employee', $th->getMessage(), 500);
         }
     }
     
@@ -101,17 +86,9 @@ class EmployeeController extends Controller
         try {
             $employee = Employee::create($validator->validated());
             
-            return response()->json([
-                    'status' => true, 
-                    'message' => 'Success Insert Data', 
-                    'data' => $employee
-                ]);
+            return ApiResponse::successResponse($employee, 'Success Insert Emloyee');
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'userMessage' => 'Failed to Insert Employee',
-                'developerMessage' => $th->getMessage()
-            ], 500);
+            return ApiResponse::errorResponse('Failed Insert Employee', $th->getMessage(), 500);
         }
     }
 
@@ -145,16 +122,9 @@ class EmployeeController extends Controller
             $employee = Employee::find($id);
             $employee->update($validator->validated());
 
-            return response()->json([
-                'status' => true, 
-                'message' => 'Success Update Emloyee', 
-                'data' => $employee]);
+            return ApiResponse($employee, 'Success Update Employee');
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'userMessage' => 'Failed to Update Employee',
-                'developerMessage' => $th->getMessage()
-            ], 500);
+            return ApiResponse::errorResponse('Failed Update Employee', $th->getMessage(), 500);
         }
     }
 
@@ -169,17 +139,9 @@ class EmployeeController extends Controller
             $employee = Employee::find($id);
             $employee->delete();
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Success Delete Employee',
-                'data' => $employee
-            ]);
+            return ApiResponse::successResponse($employee, 'Success Delete Eployee');
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'userMessage' => 'Failed to Delete Employee',
-                'data' => $emloyee
-            ]);
+            return ApiResponse::errorResponse('Failed Delete Emloyee', $th->getMessage(), 500);
         }
     }
 }
