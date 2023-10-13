@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('leaves', function (Blueprint $table) {
             $table->id();
-            $table->foreign('id_employee')->references('id')->on('employees');
+            $table->unsignedBigInteger('id_employee');
             $table->date('start_date');
             $table->date('end_date');
             $table->string('reason', 30);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('id_employee')->references('id')->on('employees');
         });
     }
 
