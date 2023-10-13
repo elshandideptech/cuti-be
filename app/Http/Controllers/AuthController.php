@@ -29,6 +29,24 @@ class AuthController extends Controller
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
-        return response()->json(['token' => $token]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Login Succesuly', 
+            'token' => $token
+        ]);
+    }
+
+    public function logout(){
+        if ($removeToken = JWTAuth::invalidate(JWTAuth::getToken())){
+            return response()->json([
+                'success' => true,
+                'message' => 'Logout Succesfully!',  
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => "Logout Failed"
+        ], 400);
     }
 }
