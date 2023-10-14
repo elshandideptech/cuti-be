@@ -41,7 +41,7 @@ class EmployeeController extends Controller
      */
     public function show($id){
         try {
-            $employees = Employee::select(
+            $employee = Employee::select(
                 'id',
                 'first_name',
                 'last_name',
@@ -53,7 +53,7 @@ class EmployeeController extends Controller
 
             return ApiResponse::successResponse($employee, 'Succecc Get The Employee');
         } catch (\Throwable $th) {
-            return Apiesponse::errorResponse('Failed Get the Employee', $th->getMessage(), 500);
+            return ApiResponse::errorResponse('Failed Get the Employee', $th->getMessage(), 500);
         }
     }
     
@@ -139,7 +139,7 @@ class EmployeeController extends Controller
             $employee = Employee::find($id);
             $employee->delete();
 
-            return ApiResponse::successResponse($employee, 'Success Delete Eployee');
+            return ApiResponse::successResponse($employee, 'Success Delete Employee');
         } catch (\Throwable $th) {
             return ApiResponse::errorResponse('Failed Delete Employee', $th->getMessage(), 500);
         }
