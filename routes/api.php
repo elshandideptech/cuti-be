@@ -56,5 +56,6 @@ Route::group(['prefix'=>'/v1'], function(){
     Route::group(['prefix' => 'profile', 'middleware' => 'auth.jwt'], function(){
         Route::get('/', [ProfileController::class, 'index']);
         Route::put('/', [ProfileController::class, 'update']);
+        Route::put('/password', [ProfileController::class, 'changePassword']);
     });
 });
