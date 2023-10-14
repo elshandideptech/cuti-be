@@ -30,6 +30,26 @@ class LeaveController extends Controller
     }
 
     /**
+     * fungsi untuk mengambil data cuti berdasarkan id
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON data leave
+     * created at October 14, 2023
+     */
+    public function show($id){
+        try {
+            $leave = Leave::select(
+                'id',
+                'title',
+                'description'
+            )->find($id);
+
+            return ApiResponse::successResponse($leave, 'Succecc Get The Leave');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Get the Leave', $th->getMessage(), 500);
+        }
+    }
+
+    /**
      * fungsi untuk membuat data cuti
      * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
      * @param $title Title of leave (required, max 10 characters)
