@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     EmployeeController,
     LeaveController,
     UserController,
+    ProfileController,
 };
 
 /*
@@ -51,5 +52,9 @@ Route::group(['prefix'=>'/v1'], function(){
         Route::post('/', [UserController::class, 'store']);
         Route::put('/{id}', [UserController::class, 'update']);
         Route::delete('/{id}', [UserController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'profile', 'middleware' => 'auth.jwt'], function(){
+        Route::get('/', [ProfileController::class, 'index']);
+        Route::put('/', [ProfileController::class, 'update']);
     });
 });
