@@ -10,6 +10,27 @@ use App\Helpers\ApiResponse;
 class ProfileController extends Controller
 {
     /**
+     * fungsi untuk mengambil data profil user
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON data profile user
+     * created at October 14, 2023
+     */
+    public function index(){
+        try {
+            $user = User::select(
+                'id',
+                'first_name',
+                'last_name',
+                'email'
+            )->find(auth()->user()->id);
+
+            return ApiResponse::successResponse($user, 'Success Get Profile');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Get All Profle', $th->getMessage(), 500);
+        }
+    }
+
+    /**
      * fungsi untuk mengubah data user
      * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
      * @param $first_nama First Name of User (required, max 20 characters)
@@ -37,9 +58,9 @@ class ProfileController extends Controller
                 'email' => $request->email,
             ]);
             
-            return ApiResponse::successResponse($user, 'Success Update User');
+            return ApiResponse::successResponse($user, 'Success Update Profile');
         } catch (\Throwable $th) {
-            return ApiResponse::errorResponse('Failed Update User', $th->getMessage(), 500);
+            return ApiResponse::errorResponse('Failed Update Profile', $th->getMessage(), 500);
         }
     }
 }
