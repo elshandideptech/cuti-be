@@ -11,6 +11,27 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
+     * fungsi untuk mengambil semua data user
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON data users
+     * created at October 14, 2023
+     */
+    public function index(){
+        try {
+            $users = User::select(
+                'id',
+                'first_name',
+                'last_name',
+                'email'
+            )->get();
+
+            return ApiResponse::successResponse($users, 'Success Get All Users');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Get All Users', $th->getMessage(), 500);
+        }
+    }
+
+    /**
      * fungsi untuk membuat data user
      * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
      * @param $first_nama First Name of User (required, max 20 characters)
