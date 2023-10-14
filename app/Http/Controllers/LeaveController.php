@@ -10,6 +10,26 @@ use App\Helpers\ApiResponse;
 class LeaveController extends Controller
 {
     /**
+     * fungsi untuk mengambil semua data cuti
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON data leaves
+     * created at October 14, 2023
+     */
+    public function index(){
+        try {
+            $leaves = Leave::select(
+                'id',
+                'title',
+                'description'
+            )->get();
+
+            return ApiResponse::successResponse($leaves, 'Success Get All Leaves');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Get All Leaves', $th->getMessage(), 500);
+        }
+    }
+
+    /**
      * fungsi untuk membuat data cuti
      * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
      * @param $title Title of leave (required, max 10 characters)
