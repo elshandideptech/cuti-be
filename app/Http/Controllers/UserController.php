@@ -123,4 +123,21 @@ class UserController extends Controller
             return ApiResponse::errorResponse('Failed Update User', $th->getMessage(), 500);
         }
     }
+
+    /**
+     * fungsi untuk menghapus data cuti berdasarkan id
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON status, message, and data
+     * created at October 14, 2023
+     */
+    public function destroy($id){
+        try {
+            $user = User::find($id);
+            $user->delete();
+
+            return ApiResponse::successResponse($user, 'Success Delete User');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Delete User', $th->getMessage(), 500);
+        }
+    }
 }
