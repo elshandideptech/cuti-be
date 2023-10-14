@@ -93,7 +93,7 @@ class EmployeeController extends Controller
     }
 
     /**
-     * fungsi untuk mengubah data karyawan baru
+     * fungsi untuk mengubah data karyawan
      * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
      * @param $first_name First Name of employee (required, max 20 characters)
      * @param $last_name Last Name of employee (required, max 20 characters)
@@ -122,7 +122,7 @@ class EmployeeController extends Controller
             $employee = Employee::find($id);
             $employee->update($validator->validated());
 
-            return ApiResponse($employee, 'Success Update Employee');
+            return ApiResponse::successResponse($employee, 'Success Update Employee');
         } catch (\Throwable $th) {
             return ApiResponse::errorResponse('Failed Update Employee', $th->getMessage(), 500);
         }
@@ -141,7 +141,7 @@ class EmployeeController extends Controller
 
             return ApiResponse::successResponse($employee, 'Success Delete Eployee');
         } catch (\Throwable $th) {
-            return ApiResponse::errorResponse('Failed Delete Emloyee', $th->getMessage(), 500);
+            return ApiResponse::errorResponse('Failed Delete Employee', $th->getMessage(), 500);
         }
     }
 }
