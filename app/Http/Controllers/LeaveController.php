@@ -103,4 +103,21 @@ class LeaveController extends Controller
             return ApiResponse::errorResponse('Failed Update Leave', $th->getMessage(), 500);
         }
     }
+
+    /**
+     * fungsi untuk menghapus data cuti berdasarkan id
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON status, message, and data
+     * created at October 14, 2023
+     */
+    public function destroy($id){
+        try {
+            $leave = Leave::find($id);
+            $leave->delete();
+
+            return ApiResponse::successResponse($leave, 'Success Delete Leave');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Delete Leave', $th->getMessage(), 500);
+        }
+    }
 }
