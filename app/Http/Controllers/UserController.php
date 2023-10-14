@@ -32,6 +32,27 @@ class UserController extends Controller
     }
 
     /**
+     * fungsi untuk mengambil data user berdasarkan id
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON data user
+     * created at October 14, 2023
+     */
+    public function show($id){
+        try {
+            $user = User::select(
+                'id',
+                'first_name',
+                'last_name',
+                'email'
+            )->find($id);
+
+            return ApiResponse::successResponse($user, 'Succecc Get The User');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Get the User', $th->getMessage(), 500);
+        }
+    }
+
+    /**
      * fungsi untuk membuat data user
      * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
      * @param $first_nama First Name of User (required, max 20 characters)
