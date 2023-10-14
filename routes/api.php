@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AuthController,
     EmployeeController,
-    LeaveController
+    LeaveController,
+    UserController,
 };
 
 /*
@@ -43,5 +44,12 @@ Route::group(['prefix'=>'/v1'], function(){
         Route::post('/', [LeaveController::class, 'store']);
         Route::put('/{id}', [LeaveController::class, 'update']);
         Route::delete('/{id}', [LeaveController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'users', 'middleware' => 'auth.jwt'], function(){
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('/{id}', [UserController::class, 'show']);
+        Route::post('/', [UserController::class, 'store']);
+        Route::put('/{id}', [UserController::class, 'update']);
+        Route::delete('/{id}', [UserController::class, 'destroy']);
     });
 });
