@@ -115,4 +115,21 @@ class EmployeeTakeLeaveController extends Controller
             return ApiResponse::errorResponse('Failed Update Employee Take Leave', $th->getMessage(), 500);
         }
     }
+
+    /**
+     * fungsi untuk menghapus data cuti karyawan berdasarkan id
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON status, message, and data
+     * created at October 15, 2023
+     */
+    public function destroy($id){
+        try {
+            $employee_take_leave = EmployeeTakeLeave::find($id);
+            $employee_take_leave->delete();
+
+            return ApiResponse::successResponse($employee_take_leave, 'Success Delete Employee Take Leave');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Delete Employee Take Leave', $th->getMessage(), 500);
+        }
+    }
 }
