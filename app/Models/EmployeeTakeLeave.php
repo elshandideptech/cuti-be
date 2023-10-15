@@ -15,4 +15,12 @@ class EmployeeTakeLeave extends Model
         'start_date',
         'end_date'
     ];
+
+    public function employee(){
+        return $this->belongsTo(Employee::class, 'id_employee');
+    }
+
+    public function leave(){
+        return $this->belongsTo(Leave::class, 'id_leave');
+    }
 }

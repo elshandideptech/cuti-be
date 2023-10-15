@@ -23,7 +23,10 @@ class EmployeeTakeLeaveController extends Controller
                 'id_leave',
                 'start_date',
                 'end_date',
-            )->get();
+            )->with([
+                'employee:id,first_name,last_name,email,phone_number,address,gender', 
+                'leave:id,title,description'
+            ])->get();
 
             return ApiResponse::successResponse($employee_take_leaves, 'Success Get All Empoyee Take Leave');
         } catch (\Throwable $th) {
@@ -45,7 +48,10 @@ class EmployeeTakeLeaveController extends Controller
                 'id_leave',
                 'start_date',
                 'end_date',
-            )->find($id);
+            )->with([
+                'employee:id,first_name,last_name,email,phone_number,address,gender', 
+                'leave:id,title,description'
+            ])->find($id);
 
             return ApiResponse::successResponse($employee_take_leave, 'Success Get Empoyee Take Leave');
         } catch (\Throwable $th) {
