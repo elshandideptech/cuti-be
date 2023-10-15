@@ -10,6 +10,28 @@ use App\Helpers\ApiResponse;
 class EmployeeTakeLeaveController extends Controller
 {
     /**
+     * fungsi untuk mengambil semua data cuti karyawan
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON data employee take leaves
+     * created at October 15, 2023
+     */
+    public function index(){
+        try {
+            $employee_take_leaves = EmployeeTakeLeave::select(
+                'id',
+                'id_employee',
+                'id_leave',
+                'start_date',
+                'end_date',
+            )->get();
+
+            return ApiResponse::successResponse($employee_take_leaves, 'Success Get All Empoyee Take Leave');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Get All Employee Take Leave', $th->getMessage(), 500);
+        }
+    }
+
+    /**
      * fungsi untuk membuat data karyawan mengambil cuti
      * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
      * @param $id_employee employee's id who take leave (required, integer)
