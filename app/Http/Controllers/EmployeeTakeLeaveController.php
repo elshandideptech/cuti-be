@@ -32,6 +32,28 @@ class EmployeeTakeLeaveController extends Controller
     }
 
     /**
+     * fungsi untuk mengambil data cuti karyawan berdasarkan id
+     * * @author Elshandi Septiawan <elshandi@deptechdigital.com>
+     * @return JSON data employee take leave
+     * created at October 15, 2023
+     */
+    public function show($id){
+        try {
+            $employee_take_leave = EmployeeTakeLeave::select(
+                'id',
+                'id_employee',
+                'id_leave',
+                'start_date',
+                'end_date',
+            )->find($id);
+
+            return ApiResponse::successResponse($employee_take_leave, 'Success Get Empoyee Take Leave');
+        } catch (\Throwable $th) {
+            return ApiResponse::errorResponse('Failed Get Employee Take Leave', $th->getMessage(), 500);
+        }
+    }
+
+    /**
      * fungsi untuk membuat data karyawan mengambil cuti
      * * @author Elshandi Septiawan <elshandi@deptechdigital.com> 
      * @param $id_employee employee's id who take leave (required, integer)
