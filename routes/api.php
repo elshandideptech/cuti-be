@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     LeaveController,
     UserController,
     ProfileController,
+    EmployeeTakeLeaveController,
 };
 
 /*
@@ -57,5 +58,12 @@ Route::group(['prefix'=>'/v1'], function(){
         Route::get('/', [ProfileController::class, 'index']);
         Route::put('/', [ProfileController::class, 'update']);
         Route::put('/password', [ProfileController::class, 'changePassword']);
+    });
+    Route::group(['prefix' => 'employee-take-leaves', 'middleware' => 'auth.jwt'], function(){
+        Route::get('/', [EmployeeTakeLeaveController::class, 'index']);
+        Route::get('/{id}', [EmployeeTakeLeaveController::class, 'show']);
+        Route::post('/', [EmployeeTakeLeaveController::class, 'store']);
+        Route::put('/{id}', [EmployeeTakeLeaveController::class, 'update']);
+        Route::delete('/{id}', [EmployeeTakeLeaveController::class, 'destroy']);
     });
 });
