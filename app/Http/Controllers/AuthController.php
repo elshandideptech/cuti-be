@@ -64,4 +64,11 @@ class AuthController extends Controller
             'message' => "Logout Failed"
         ], 400);
     }
+
+    public function authentication(){
+        return response()->json([
+            'success' => true,
+            'message' => 'Authenticated',
+        ]);
+    }
 }
