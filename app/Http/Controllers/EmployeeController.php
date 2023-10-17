@@ -136,7 +136,10 @@ class EmployeeController extends Controller
      */
     public function destroy($id){
         try {
-            $employee = Employee::find($id);
+            $employee = Employee::with('leaves')->find($id);
+            if($employee->leaves){
+                return ApiResponse::errorResponse('Employee Can not Deleted, Becaue The Employee have Leave(s)', null, 400);
+            }
             $employee->delete();
 
             return ApiResponse::successResponse($employee, 'Success Delete Employee');

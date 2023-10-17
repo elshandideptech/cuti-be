@@ -18,4 +18,8 @@ class Employee extends Model
         'address',
         'gender',
     ];
+
+    public function leaves(){
+        return $this->hasMany(EmployeeTakeLeave::class, 'id_employee');
+    }
 }
