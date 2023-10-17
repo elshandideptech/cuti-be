@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\EmployeeTakeLeave;
 use App\Helpers\ApiResponse;
+use Carbon\Carbon;
 
 class EmployeeTakeLeaveController extends Controller
 {
@@ -78,10 +79,29 @@ class EmployeeTakeLeaveController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), 422);
         }
 
         try {
+            $start_date = Carbon::parse($request->start_date);
+            $end_date = Carbon::parse($request->end_date);
+            $count_leaves_will_take = $start_date->diffInDays($end_date)+1;
+
+            $get_leaves_this_year = EmployeeTakeLeave::select('start_date', 'end_date')
+                ->where('id_employee', $request->id_employee)
+                ->whereYear('created_at', Carbon::today()->year)->get();
+            $count_leaves_taken = 0;
+            foreach ($get_leaves_this_year as $leave) {
+                $start_date = Carbon::parse($leave->start_date);
+                $end_date = Carbon::parse($leave->end_date);
+                $count_per_leave = $start_date->diffInDays($end_date)+1;
+                $count_leaves_taken += $count_per_leave;
+            }
+
+            if($count_leaves_taken + $count_leaves_will_take > 5){
+                return ApiResponse::errorResponse('Sorry! You only can take 5 days leaves in a year', null, 400);
+            }
+
             $employee_take_leave = EmployeeTakeLeave::create($validator->validated());
             
             return ApiResponse::successResponse($employee_take_leave, 'Success Insert Employee Take Leave');
