@@ -24,4 +24,7 @@ class Employee extends Model
     public function leaves(){
         return $this->hasMany(EmployeeTakeLeave::class, 'id_employee');
     }
+    public function language(){
+        return $this->belongsTo(Language::class, 'id_language');
+    }
 }

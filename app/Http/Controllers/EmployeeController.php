@@ -15,7 +15,7 @@ class EmployeeController extends Controller
      * @return JSON data employees
      * created at October 13, 2023
      */
-    public function index(){
+    public function index(Request $request){
         try {
             $employees = Employee::select(
                 'id',
@@ -25,7 +25,9 @@ class EmployeeController extends Controller
                 'phone_number',
                 'address',
                 'gender'
-            )->get();
+            )->whereHas('language', function($query) use ($request){
+                $query->where('code', $request->header('language'));
+            })->get();
 
             return ApiResponse::successResponse($employees, 'Success Get All Empoyees');
         } catch (\Throwable $th) {
@@ -68,6 +70,7 @@ class EmployeeController extends Controller
      * @param $gender gender employee (required, max 10 characters, in: Laki-Laki/Perempuan)
      * @return void success message and data inserted
      * created at October 13, 2023
+     * modified by Elshandi Septiawan at October 18, 2023
      */
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
