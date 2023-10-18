@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_language');
-            $table->foreignId('id_parent');
+            $table->foreignId('id_parent')->nullable();
             $table->string('first_name', 20);
             $table->string('last_name', 20);
-            $table->string('email', 50)->unique();
+            $table->string('email', 50);
             $table->string('phone_number', 15);
             $table->string('address', 255);
             $table->string('gender', 10);

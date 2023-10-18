@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('leaves', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_language');
-            $table->foreignId('id_parent');
+            $table->foreignId('id_parent')->nullable();
             $table->string('title', 10);
             $table->string('description', 255);
             $table->timestamps();
