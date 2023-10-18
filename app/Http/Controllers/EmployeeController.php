@@ -26,7 +26,7 @@ class EmployeeController extends Controller
                 'address',
                 'gender'
             )->whereHas('language', function($query) use ($request){
-                $query->where('code', $request->header('language'));
+                $query->where('code', $request->header('Language'));
             })->get();
 
             return ApiResponse::successResponse($employees, 'Success Get All Empoyees');
