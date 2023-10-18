@@ -71,12 +71,18 @@ class EmployeeController extends Controller
      */
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|max:20',
-            'last_name' => 'required|string|max:20',
-            'email' => 'required|email|max:50',
-            'phone_number' => 'required|string|max:15',
-            'address' => 'required|string|max:255',
-            'gender' => 'required|string|max:10|in:Laki-Laki,Perempuan'
+            'first_name_id' => 'required|string|max:20',
+            'last_name_id' => 'required|string|max:20',
+            'email_id' => 'required|email|max:50',
+            'phone_number_id' => 'required|string|max:15',
+            'address_id' => 'required|string|max:255',
+            'gender_id' => 'required|string|max:10|in:Laki-Laki,Perempuan',
+            'first_name_en' => 'required|string|max:20|same:first_name_id',
+            'last_name_en' => 'required|string|max:20|same:last_name_id',
+            'email_en' => 'required|email|max:50|same:email_id',
+            'phone_number_en' => 'required|string|max:15|same:phone_number_id',
+            'address_en' => 'required|string|max:255',
+            'gender_en' => 'required|string|max:10|in:Male,Female'
         ]);
 
         if ($validator->fails()) {
@@ -84,9 +90,36 @@ class EmployeeController extends Controller
         }
 
         try {
-            $employee = Employee::create($validator->validated());
+            $employee_indonesia = Employee::create([
+                'id_language' => 1,
+                'first_name' => $request->first_name_id,
+                'last_name' => $request->last_name_id,
+                'email' => $request->email_id,
+                'phone_number' => $request->phone_number_id,
+                'address' => $request->address_id,
+                'gender' => $request->gender_id,
+            ]);
+
+            $employee_english = Employee::create([
+                'id_language' => 2,
+                'id_parent' => $employee_indonesia->id,
+                'first_name' => $request->first_name_en,
+                'last_name' => $request->last_name_en,
+                'email' => $request->email_en,
+                'phone_number' => $request->phone_number_en,
+                'address' => $request->address_en,
+                'gender' => $request->gender_en,
+            ]);
+
+            $employee_indonesia->id_parent = $employee_english->id;
+            $employee_indonesia->save();
+
+            $response = [
+                'Indonesia' => $employee_indonesia,
+                'English' => $employee_english,
+            ];
             
-            return ApiResponse::successResponse($employee, 'Success Insert Emloyee');
+            return ApiResponse::successResponse($response, 'Success Insert Emloyee');
         } catch (\Throwable $th) {
             return ApiResponse::errorResponse('Failed Insert Employee', $th->getMessage(), 500);
         }
