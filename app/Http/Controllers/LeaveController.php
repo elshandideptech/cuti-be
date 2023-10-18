@@ -15,13 +15,15 @@ class LeaveController extends Controller
      * @return JSON data leaves
      * created at October 14, 2023
      */
-    public function index(){
+    public function index(Request $request){
         try {
             $leaves = Leave::select(
                 'id',
                 'title',
                 'description'
-            )->get();
+            )->whereHas('language', function($query) use ($request) {
+                $query->where('code', $request->header('Language'));
+            })->get();
 
             return ApiResponse::successResponse($leaves, 'Success Get All Leaves');
         } catch (\Throwable $th) {

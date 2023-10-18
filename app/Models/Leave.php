@@ -16,4 +16,8 @@ class Leave extends Model
         'title',
         'description'
     ];
+
+    public function language(){
+        return $this->belongsTo(Language::class, 'id_language');
+    }
 }
