@@ -10,6 +10,7 @@ class EmployeeTakeLeave extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id_language',
         'id_employee',
         'id_leave',
         'start_date',
@@ -22,5 +23,8 @@ class EmployeeTakeLeave extends Model
 
     public function leave(){
         return $this->belongsTo(Leave::class, 'id_leave');
+    }
+    public function language(){
+        return $this->belongsTo(Language::class, 'id_language');
     }
 }

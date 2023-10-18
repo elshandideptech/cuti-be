@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('employee_take_leaves', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_language');
             $table->foreignId('id_employee');
             $table->foreignId('id_leave');
             $table->date('start_date');

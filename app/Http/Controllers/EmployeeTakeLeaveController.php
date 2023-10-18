@@ -16,7 +16,7 @@ class EmployeeTakeLeaveController extends Controller
      * @return JSON data employee take leaves
      * created at October 15, 2023
      */
-    public function index(){
+    public function index(Request $request){
         try {
             $employee_take_leaves = EmployeeTakeLeave::select(
                 'id',
@@ -27,7 +27,9 @@ class EmployeeTakeLeaveController extends Controller
             )->with([
                 'employee:id,first_name,last_name,email,phone_number,address,gender', 
                 'leave:id,title,description'
-            ])->get();
+            ])->whereHas('language', function($query) use ($request) {
+                $query->where('code', $request->header('Language'));
+            })->get();
 
             return ApiResponse::successResponse($employee_take_leaves, 'Success Get All Empoyee Take Leave');
         } catch (\Throwable $th) {
@@ -69,13 +71,18 @@ class EmployeeTakeLeaveController extends Controller
      * @param $end_date date when employee end leave (required, date, date format:YYYY-MM-DD, after start date)
      * @return void success message and data inserted
      * created at October 15, 2023
+     * mofified by Elshandi Septiawan at October 18, 2023
      */
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'id_employee' => 'required|integer',
-            'id_leave' => 'required|integer',
-            'start_date' => 'required|date|date_format:Y-m-d',
-            'end_date' => 'required|date|date_format:Y-m-d|after:start_date',
+            'id_employee_id' => 'required|integer',
+            'id_leave_id' => 'required|integer',
+            'start_date_id' => 'required|date|date_format:Y-m-d',
+            'end_date_id' => 'required|date|date_format:Y-m-d|after:start_date_id',
+            'id_employee_en' => 'required|integer',
+            'id_leave_en' => 'required|integer',
+            'start_date_en' => 'required|date|date_format:Y-m-d|same:start_date_id',
+            'end_date_en' => 'required|date|date_format:Y-m-d|after:start_date_en|same:end_date_id',
         ]);
 
         if ($validator->fails()) {
@@ -83,12 +90,13 @@ class EmployeeTakeLeaveController extends Controller
         }
 
         try {
-            $start_date = Carbon::parse($request->start_date);
-            $end_date = Carbon::parse($request->end_date);
+            $start_date = Carbon::parse($request->start_date_id);
+            $end_date = Carbon::parse($request->end_date_id);
             $count_leaves_will_take = $start_date->diffInDays($end_date)+1;
 
             $get_leaves_this_year = EmployeeTakeLeave::select('start_date', 'end_date')
                 ->where('id_employee', $request->id_employee)
+                ->where('id_language', $request->header('language'))
                 ->whereYear('created_at', Carbon::today()->year)->get();
             $count_leaves_taken = 0;
             foreach ($get_leaves_this_year as $leave) {
@@ -102,9 +110,28 @@ class EmployeeTakeLeaveController extends Controller
                 return ApiResponse::errorResponse('Sorry! You only can take 5 days leaves in a year', null, 400);
             }
 
-            $employee_take_leave = EmployeeTakeLeave::create($validator->validated());
+            $employee_take_leave_indonesia = EmployeeTakeLeave::create([
+                'id_language' => 1,
+                'id_employee' => $request->id_employee_id,
+                'id_leave' => $request->id_leave_id,
+                'start_date' => $request->start_date_id,
+                'end_date' => $request->end_date_id,
+            ]);
+
+            $employee_take_leave_english = EmployeeTakeLeave::create([
+                'id_language' => 2,
+                'id_employee' => $request->id_employee_en,
+                'id_leave' => $request->id_leave_en,
+                'start_date' => $request->start_date_en,
+                'end_date' => $request->end_date_en,
+            ]);
+
+            $response = [
+                'Indonesia' => $employee_take_leave_indonesia,
+                'English' => $employee_take_leave_english,
+            ];
             
-            return ApiResponse::successResponse($employee_take_leave, 'Success Insert Employee Take Leave');
+            return ApiResponse::successResponse($response, 'Success Insert Employee Take Leave');
         } catch (\Throwable $th) {
             return ApiResponse::errorResponse('Failed Insert Employee Take Leave', $th->getMessage(), 500);
         }
