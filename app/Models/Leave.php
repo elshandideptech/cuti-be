@@ -11,6 +11,8 @@ class Leave extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'id_language',
+        'id_parent',
         'title',
         'description'
     ];

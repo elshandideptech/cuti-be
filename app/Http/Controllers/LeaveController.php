@@ -59,8 +59,10 @@ class LeaveController extends Controller
      */
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:10',
-            'description' => 'required|string|max:225',
+            'title_id' => 'required|string|max:10',
+            'description_id' => 'required|string|max:225',
+            'title_en' => 'required|string|max:10',
+            'description_en' => 'required|string|max:225',
         ]);
 
         if ($validator->fails()) {
@@ -68,9 +70,29 @@ class LeaveController extends Controller
         }
 
         try {
-            $leave = Leave::create($validator->validated());
+            // $leave = Leave::create($validator->validated());
+            $leave_indonesia = Leave::create([
+                'id_language' => 1,
+                'title' =>$request->title_id,
+                'description' =>$request->description_id,
+            ]);
+
+            $leave_english = Leave::create([
+                'id_language' => 2,
+                'id_parent' => $leave_indonesia->id,
+                'title' =>$request->title_en,
+                'description' =>$request->description_en,
+            ]);
+
+            $leave_indonesia->id_parent = $leave_english->id;
+            $leave_indonesia->save();
+
+            $response = [
+                'Indonesia' => $leave_indonesia,
+                'English' => $leave_english,
+            ];
             
-            return ApiResponse::successResponse($leave, 'Success Insert Leave');
+            return ApiResponse::successResponse($response, 'Success Insert Leave');
         } catch (\Throwable $th) {
             return ApiResponse::errorResponse('Failed Insert Leave', $th->getMessage(), 500);
         }
